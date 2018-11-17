@@ -21,6 +21,7 @@ type Dahua struct {
 	realm        string
 }
 
+// Make default Dahua Panel client
 func NewDahuaClient(username, password, address string) *Dahua {
 	return &Dahua{
 		username:     username,
@@ -122,6 +123,10 @@ func (d *Dahua) setSessionValue(s string) (ret *Dahua) {
 
 // make api call
 func (d *Dahua) makeApiCall(send *gorequest.SuperAgent) (*http.Response, string, []error) {
+
+	if d.isLogged() == false {
+		return nil, "", []error{errors.New("client is not logged")}
+	}
 	d.requestCount++
 	return send.End()
 }
@@ -138,7 +143,11 @@ func (d *Dahua) UpdateMaintainParams(params *maintainParams) (rez error) {
 	response, _, errs := d.makeApiCall(req.Post(d.getMaintainsUrl()).Send(setRequest))
 
 	if response.StatusCode != 200 || len(errs) > 0 {
-		rez = errors.New("error updating settings")
+		if len(errs) > 0 {
+			rez = errs[0]
+		} else {
+			rez = errors.New("error updating settings")
+		}
 	}
 
 	return
@@ -147,4 +156,9 @@ func (d *Dahua) UpdateMaintainParams(params *maintainParams) (rez error) {
 // Get Maintain Url
 func (d *Dahua) getMaintainsUrl() string {
 	return fmt.Sprintf("%s%s", d.getBaseUrl(), maintainSettingEndpoint)
+}
+
+// Check is the client logged or not
+func (d *Dahua) isLogged() bool {
+	return len(d.session) > 0
 }

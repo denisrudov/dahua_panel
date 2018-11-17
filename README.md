@@ -22,6 +22,30 @@ in your code and then
 feel free to contribute :)
 
 
+### How to use
+
+Just create client with credentials and IP address of a dahua panel
+
+``` client := NewDahuaClient("admin", "adminpassword", "192.168.0.91")```
+
+
+To log in
+
+``` client.Login() ```
+
+To update maintain parameters
+
+```
+if client.Login() {
+    maintainParams := dahua_panel.NewMaintainParams()
+
+    if err := client.UpdateMaintainParams(maintainParams); err != nil {
+       log.Println(err)
+    }
+}
+```
+
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
