@@ -1,13 +1,5 @@
 package dahua_panel
 
-const (
-	LoginMethod   = "global.login"
-	ClientType    = "Web3.0"
-	LoginEndpoint = "/RPC2_Login"
-	AuthorityType = "Default"
-	PasswordType  = "Default"
-)
-
 type LoginRequest struct {
 	Method  string `json:"method"`
 	Params  `json:"params"`
@@ -47,7 +39,7 @@ func newLoginRequest(username, password, session string, id int) *LoginRequest {
 	}
 
 	return &LoginRequest{
-		Method:  LoginMethod,
+		Method:  loginRequestMethodName,
 		Params:  Params{UserName: username, Password: password, ClientType: ClientType},
 		ID:      id,
 		Session: innerSession,
@@ -65,6 +57,6 @@ func newSecondLoginRequest(username, password, session, realm string, id int) *S
 		},
 		Session: session,
 		ID:      id,
-		Method:  LoginMethod,
+		Method:  loginRequestMethodName,
 	}
 }

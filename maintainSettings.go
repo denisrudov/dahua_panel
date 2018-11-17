@@ -1,9 +1,5 @@
 package dahua_panel
 
-const (
-	maintainParamName = "AutoMaintain"
-)
-
 type TableData struct {
 	AutoRebootDay      int  `json:"AutoRebootDay"`
 	AutoRebootEnable   bool `json:"AutoRebootEnable"`

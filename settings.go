@@ -1,9 +1,5 @@
 package dahua_panel
 
-const (
-	configRequestMethodName = "configManager.setConfig"
-)
-
 type settingRequest struct {
 	Method  string      `json:"method"`
 	Params  interface{} `json:"params"`

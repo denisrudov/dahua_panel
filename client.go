@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/parnurzeal/gorequest"
 	"log"
@@ -29,6 +30,7 @@ func NewDahuaClient(username, password, address string) *Dahua {
 	}
 }
 
+// Login to Dahua Panel
 func (d *Dahua) Login() (rez bool) {
 	rez = false
 	if d.makeFirstLogin() {
@@ -85,6 +87,7 @@ func (d *Dahua) makeSecondLogin() (rez bool) {
 	return
 }
 
+// Get basic JSON Request
 func getJsonRequest() *gorequest.SuperAgent {
 	req := gorequest.New()
 	req.Set("Content-type", "application/json")
@@ -100,13 +103,21 @@ func (d *Dahua) generateUserPassword() string {
 	return strings.ToUpper(md52)
 }
 
+// Get Login Url
 func (d *Dahua) getLoginUrl() string {
-	return fmt.Sprintf("http://%s%s", d.address, LoginEndpoint)
+	return fmt.Sprintf("%s%s", d.getBaseUrl(), LoginEndpoint)
+}
+
+// Get Base Url
+func (d *Dahua) getBaseUrl() string {
+	return fmt.Sprintf("http://%s", d.address)
 }
 
 // set session value
-func (d *Dahua) setSessionValue(s string) {
+func (d *Dahua) setSessionValue(s string) (ret *Dahua) {
+	ret = d
 	d.session = s
+	return
 }
 
 // make api call
@@ -114,12 +125,26 @@ func (d *Dahua) makeApiCall(send *gorequest.SuperAgent) (*http.Response, string,
 	d.requestCount++
 	return send.End()
 }
-func (d *Dahua) setRealmValue(realmValue string) {
+func (d *Dahua) setRealmValue(realmValue string) (rez *Dahua) {
+	rez = d
 	d.realm = realmValue
+	return
 }
 
 // Update Maintain Params
 func (d *Dahua) UpdateMaintainParams(params *maintainParams) (rez error) {
+	req := getJsonRequest()
+	setRequest := NewSettingRequest(params, d.requestCount, d.session)
+	response, _, errs := d.makeApiCall(req.Post(d.getMaintainsUrl()).Send(setRequest))
+
+	if response.StatusCode != 200 || len(errs) > 0 {
+		rez = errors.New("error updating settings")
+	}
 
 	return
+}
+
+// Get Maintain Url
+func (d *Dahua) getMaintainsUrl() string {
+	return fmt.Sprintf("%s%s", d.getBaseUrl(), maintainSettingEndpoint)
 }
