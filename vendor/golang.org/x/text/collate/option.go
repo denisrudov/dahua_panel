@@ -123,10 +123,10 @@ func (o *options) setFromTag(t language.Tag) {
 	switch t.TypeForKey("ka") {
 	case "shifted":
 		o.alternate = altShifted
-	// The following two types are not official BCP47, but we support them to
-	// give access to this otherwise hidden functionality. The name blanked is
-	// derived from the LDML name blanked and posix reflects the main use of
-	// the shift-trimmed option.
+		// The following two types are not official BCP47, but we support them to
+		// give access to this otherwise hidden functionality. The name blanked is
+		// derived from the LDML name blanked and posix reflects the main use of
+		// the shift-trimmed option.
 	case "blanked":
 		o.alternate = altBlanked
 	case "posix":

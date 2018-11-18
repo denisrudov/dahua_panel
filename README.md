@@ -1,6 +1,9 @@
 # Dahua Panel 
 
 [![Build Status](https://travis-ci.com/denisrudov/dahua_panel.svg?branch=master)](https://travis-ci.com/denisrudov/dahua_panel)
+[![GitHub issues](https://img.shields.io/github/issues/denisrudov/dahua_panel.svg)](https://github.com/denisrudov/dahua_panel/issues)
+[![GitHub license](https://img.shields.io/github/license/denisrudov/dahua_panel.svg)](https://github.com/denisrudov/dahua_panel/blob/master/LICENSE.md)
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/denisrudov/dahua_panel.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fdenisrudov%2Fdahua_panel)
 
 Simple client to manage **VTO2111D** Dahua Panel
 

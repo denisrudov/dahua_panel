@@ -355,7 +355,7 @@ func (p *paragraph) determineExplicitEmbeddingLevels() {
 				}
 			}
 
-		// Rule X6a
+			// Rule X6a
 		case PDI:
 			if overflowIsolateCount > 0 {
 				overflowIsolateCount--
@@ -371,7 +371,7 @@ func (p *paragraph) determineExplicitEmbeddingLevels() {
 			}
 			p.resultLevels[i] = stack.lastEmbeddingLevel()
 
-		// Rule X7
+			// Rule X7
 		case PDF:
 			// Not really part of the spec
 			p.resultLevels[i] = stack.lastEmbeddingLevel()

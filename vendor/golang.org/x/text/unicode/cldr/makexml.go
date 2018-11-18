@@ -167,7 +167,8 @@ type element struct {
 	signature string // category + attrKey*
 
 	attr []*attribute // attributes supported by this element.
-	sub  []struct {   // parsed and evaluated sub elements of this element.
+	sub  []struct {
+		// parsed and evaluated sub elements of this element.
 		e      *element
 		repeat bool // true if the element needs to be a slice
 	}

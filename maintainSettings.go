@@ -2,7 +2,7 @@ package dahua_panel
 
 type TableData struct {
 	AutoRebootDay      int  `json:"AutoRebootDay"`
-	AutoRebootEnable   bool `json:"AutoRebootEnable"`
+	AutoRebootEnable   bool `json:"IsAutoRebootEnable"`
 	AutoRebootHour     int  `json:"AutoRebootHour"`
 	AutoRebootMinute   int  `json:"AutoRebootMinute"`
 	AutoShutdownDay    int  `json:"AutoShutdownDay"`
@@ -22,7 +22,7 @@ type maintainParams struct {
 func NewMaintainParams() *maintainParams {
 
 	return &maintainParams{
-		Name: maintainParamName,
+		Name: MaintainParamName,
 		Table: TableData{
 			AutoRebootDay:      -1,
 			AutoRebootEnable:   false,
@@ -38,6 +38,6 @@ func NewMaintainParams() *maintainParams {
 	}
 }
 
-func (p *maintainParams) AutoRebootEnable(enable bool) {
+func (p *maintainParams) IsAutoRebootEnable(enable bool) {
 	p.Table.AutoRebootEnable = enable
 }

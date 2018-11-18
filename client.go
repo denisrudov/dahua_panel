@@ -19,6 +19,7 @@ type Dahua struct {
 	requestCount int
 	session      string
 	realm        string
+	settings     map[string]interface{}
 }
 
 // Make default Dahua Panel client
@@ -28,6 +29,7 @@ func NewDahuaClient(username, password, address string) *Dahua {
 		password:     password,
 		address:      address,
 		requestCount: 1,
+		settings:     make(map[string]interface{}),
 	}
 }
 
@@ -47,13 +49,13 @@ func (d *Dahua) makeFirstLogin() (rez bool) {
 	reqObj := newLoginRequest(d.username, "", "", d.requestCount)
 	req := getJsonRequest()
 	log.Println("Make first login")
-	resp, body, errors := d.makeApiCall(req.Post(d.getLoginUrl()).Send(reqObj))
+	resp, body, reqErrors := d.makeApiCall(req.Post(d.getLoginUrl()).Send(reqObj), false)
 
 	var loginRes LoginResponse
 
 	err := json.Unmarshal([]byte(body), &loginRes)
 
-	if err == nil && resp.StatusCode == 200 && len(errors) == 0 {
+	if err == nil && resp.StatusCode == 200 && len(reqErrors) == 0 {
 		rez = true
 		//fmt.Println(loginRes.session)
 		d.setSessionValue(loginRes.Session)
@@ -122,9 +124,14 @@ func (d *Dahua) setSessionValue(s string) (ret *Dahua) {
 }
 
 // make api call
-func (d *Dahua) makeApiCall(send *gorequest.SuperAgent) (*http.Response, string, []error) {
+func (d *Dahua) makeApiCall(send *gorequest.SuperAgent, checkLogin ...bool) (*http.Response, string, []error) {
+	checkL := true
 
-	if d.isLogged() == false {
+	if len(checkLogin) == 1 {
+		checkL = checkLogin[0]
+	}
+
+	if d.isLogged() == false && checkL {
 		return nil, "", []error{errors.New("client is not logged")}
 	}
 	d.requestCount++
@@ -137,7 +144,19 @@ func (d *Dahua) setRealmValue(realmValue string) (rez *Dahua) {
 }
 
 // Update Maintain Params
-func (d *Dahua) UpdateMaintainParams(params *maintainParams) (rez error) {
+func (d *Dahua) UpdateMaintainParams(optional ...*maintainParams) (rez error) {
+
+	params := new(maintainParams)
+
+	if p, ok := d.settings[MaintainParamName]; ok && len(optional) < 1 {
+		params = p.(*maintainParams)
+	} else if len(optional) == 1 {
+		params = optional[0]
+	} else {
+		rez = errors.New("no params available")
+		return
+	}
+
 	req := getJsonRequest()
 	setRequest := NewSettingRequest(params, d.requestCount, d.session)
 	response, _, errs := d.makeApiCall(req.Post(d.getMaintainsUrl()).Send(setRequest))
@@ -148,6 +167,8 @@ func (d *Dahua) UpdateMaintainParams(params *maintainParams) (rez error) {
 		} else {
 			rez = errors.New("error updating settings")
 		}
+	} else {
+		d.settings[MaintainParamName] = params
 	}
 
 	return
@@ -161,4 +182,39 @@ func (d *Dahua) getMaintainsUrl() string {
 // Check is the client logged or not
 func (d *Dahua) isLogged() bool {
 	return len(d.session) > 0
+}
+
+// Get Maintain Params from Dahua Panel
+func (d *Dahua) GetMaintainParams() (*maintainParams, error) {
+	params := maintainParams{
+		Name: MaintainParamName,
+	}
+
+	req := NewSettingRequest(&params, d.requestCount, d.session, configRequestGetMethodName)
+
+	response, body, errs := d.makeApiCall(getJsonRequest().Post(d.getMaintainsUrl()).Send(req))
+
+	if response.StatusCode != 200 || len(errs) > 0 {
+		if len(errs) > 0 {
+			return nil, errs[0]
+		} else {
+			return nil, errors.New("bad response: " + response.Status)
+		}
+	}
+
+	err := json.Unmarshal([]byte(body), &req)
+
+	if err != nil {
+		return nil, errors.New("bad json response")
+	}
+
+	paramsFromPanel := req.Params.(*maintainParams)
+
+	d.settings[MaintainParamName] = paramsFromPanel
+
+	return paramsFromPanel, nil
+}
+
+func (d *Dahua) GetSettings() map[string]interface{} {
+	return d.settings
 }

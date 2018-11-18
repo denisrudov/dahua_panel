@@ -655,10 +655,10 @@ func (s *SuperAgent) SendString(content string) *SuperAgent {
 				for k, v := range val.(map[string]interface{}) {
 					s.Data[k] = v
 				}
-			// add to SliceData
+				// add to SliceData
 			case reflect.Slice:
 				s.SendSlice(val.([]interface{}))
-			// bounce to rawstring if it is arrayjson, or others
+				// bounce to rawstring if it is arrayjson, or others
 			default:
 				s.BounceToRawString = true
 			}
@@ -836,20 +836,20 @@ func changeMapToURLValues(data map[string]interface{}) url.Values {
 			newUrlValues.Add(k, val)
 		case bool:
 			newUrlValues.Add(k, strconv.FormatBool(val))
-		// if a number, change to string
-		// json.Number used to protect against a wrong (for GoRequest) default conversion
-		// which always converts number to float64.
-		// This type is caused by using Decoder.UseNumber()
+			// if a number, change to string
+			// json.Number used to protect against a wrong (for GoRequest) default conversion
+			// which always converts number to float64.
+			// This type is caused by using Decoder.UseNumber()
 		case json.Number:
 			newUrlValues.Add(k, string(val))
 		case int:
 			newUrlValues.Add(k, strconv.FormatInt(int64(val), 10))
-		// TODO add all other int-Types (int8, int16, ...)
+			// TODO add all other int-Types (int8, int16, ...)
 		case float64:
 			newUrlValues.Add(k, strconv.FormatFloat(float64(val), 'f', -1, 64))
 		case float32:
 			newUrlValues.Add(k, strconv.FormatFloat(float64(val), 'f', -1, 64))
-		// following slices are mostly needed for tests
+			// following slices are mostly needed for tests
 		case []string:
 			for _, element := range val {
 				newUrlValues.Add(k, element)
@@ -870,7 +870,7 @@ func changeMapToURLValues(data map[string]interface{}) url.Values {
 			for _, element := range val {
 				newUrlValues.Add(k, strconv.FormatFloat(float64(element), 'f', -1, 64))
 			}
-		// these slices are used in practice like sending a struct
+			// these slices are used in practice like sending a struct
 		case []interface{}:
 
 			if len(val) <= 0 {

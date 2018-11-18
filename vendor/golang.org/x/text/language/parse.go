@@ -685,7 +685,7 @@ func (b *builder) update(part ...interface{}) (err error) {
 			for _, e := range v {
 				b.update(e)
 			}
-		// TODO: support parsing of raw strings based on morphology or just extensions?
+			// TODO: support parsing of raw strings based on morphology or just extensions?
 		case error:
 			err = v
 		}

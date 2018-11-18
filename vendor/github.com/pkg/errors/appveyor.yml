@@ -7,25 +7,25 @@ environment:
   GOPATH: C:\gopath
 
 platform:
-  - x64
+- x64
 
 # http://www.appveyor.com/docs/installed-software
 install:
-  # some helpful output for debugging builds
-  - go version
-  - go env
-  # pre-installed MinGW at C:\MinGW is 32bit only
-  # but MSYS2 at C:\msys64 has mingw64
-  - set PATH=C:\msys64\mingw64\bin;%PATH%
-  - gcc --version
-  - g++ --version
+# some helpful output for debugging builds
+- go version
+- go env
+# pre-installed MinGW at C:\MinGW is 32bit only
+# but MSYS2 at C:\msys64 has mingw64
+- set PATH=C:\msys64\mingw64\bin;%PATH%
+- gcc --version
+- g++ --version
 
 build_script:
-  - go install -v ./...
+- go install -v ./...
 
 test_script:
-  - set PATH=C:\gopath\bin;%PATH%
-  - go test -v ./...
+- set PATH=C:\gopath\bin;%PATH%
+- go test -v ./...
 
 #artifacts:
 #  - path: '%GOPATH%\bin\*.exe'

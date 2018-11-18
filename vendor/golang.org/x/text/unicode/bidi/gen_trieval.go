@@ -28,15 +28,15 @@ const (
 
 	numClass
 
-	LRO // LeftToRightOverride
-	RLO // RightToLeftOverride
-	LRE // LeftToRightEmbedding
-	RLE // RightToLeftEmbedding
-	PDF // PopDirectionalFormat
-	LRI // LeftToRightIsolate
-	RLI // RightToLeftIsolate
-	FSI // FirstStrongIsolate
-	PDI // PopDirectionalIsolate
+	LRO  // LeftToRightOverride
+	RLO  // RightToLeftOverride
+	LRE  // LeftToRightEmbedding
+	RLE  // RightToLeftEmbedding
+	PDF  // PopDirectionalFormat
+	LRI  // LeftToRightIsolate
+	RLI  // RightToLeftIsolate
+	FSI  // FirstStrongIsolate
+	PDI  // PopDirectionalIsolate
 
 	unknownClass = ^Class(0)
 )
