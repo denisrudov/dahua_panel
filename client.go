@@ -73,13 +73,13 @@ func (d *Dahua) makeSecondLogin() (rez bool) {
 	rez = false
 	loginRequest := newSecondLoginRequest(d.username, d.generateUserPassword(), d.session, d.realm, d.requestCount)
 	req := getJsonRequest()
-	resp, body, errors := d.makeApiCall(req.Post(d.getLoginUrl()).Send(loginRequest))
+	resp, body, apiErrors := d.makeApiCall(req.Post(d.getLoginUrl()).Send(loginRequest))
 
 	loginResponse := new(SecondLoginResponse)
 
 	err := json.Unmarshal([]byte(body), loginResponse)
 
-	if err == nil && resp.StatusCode == 200 && len(errors) == 0 {
+	if err == nil && resp.StatusCode == 200 && len(apiErrors) == 0 {
 		rez = true
 		log.Println("Logged successful")
 		d.setSessionValue(loginResponse.Session)
