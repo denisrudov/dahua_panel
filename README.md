@@ -1,4 +1,6 @@
-# Dahua Panel
+# Dahua Panel 
+
+[![Build Status](https://travis-ci.com/denisrudov/dahua_panel.svg?branch=master)](https://travis-ci.com/denisrudov/dahua_panel)
 
 Simple client to manage **VTO2111D** Dahua Panel
 
